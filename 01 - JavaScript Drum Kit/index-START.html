@@ -59,16 +59,55 @@
 
 <script>
 
+// TODO: Add some piano notes and vocals!!!
+// EXPERT TODO: Add a hold keypress to play long sounds? Loop over sounds? Have background music?
+
 // First thing we need to do is focus on listening for a key hit event.
 
-  window.addEventListener('keydown', function (event) {
+
+  function playSound(e) {
     //console.log(event.keyCode) //This prints out the event info of the key we pressed ('a'). We're mostly interested in keycode.
     const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`) // Lets use our own data attribute (data-key), using variable selector
-    console.log(audio); // Now, were getting the CORRESPONDING audio element, FOR that specific key. a exists as a data-key attribute in our set, but q doesnt, so we get null
+    // Now, were getting the CORRESPONDING audio element, FOR that specific key. a exists as a data-key attribute in our set, but q doesnt, so we get null
 
+    const key = document.querySelector(`.key[data-key="${event.keyCode}"]`) // Lets use our own data attribute (data-key), using variable selector
     if(!audio) return; // stop function running all together if key is not found
+    audio.currentTime = 0; // This rewinds to the beginning, allowing sounds to be played multiple times.
     audio.play();
-  });
+    // Currently there is a bug, sounds only play once every so often. .play() on an audio element thats already playing, doesnt play again (has to finish first).
+
+    // We can fix this by REWINDING it to the start.
+
+    key.classList.add('playing'); // this is similar to jquery, for adding key.addClass('playing');. But this is just vanilla javascript. We can also do remove, and toggle.
+    // This adds them, but doesnt REMOVE them. Thus, the glow stays aroudn them (remember, the keys are changing CSS classes). One way is to set a timeout function, but we also have a timeout in our CSS javascript (a designer may change the CSS and make it out of sync)
+
+    // Rather then a timer to do it, we can use a TRANSITION END event. 
+    // What is a click event? When someone clicks, the click event fires off and says "I was clicked".
+    // Similarly, the transition event is when the border transitions via css. 
+  }
+
+  function removeTransition(e) {
+    //console.log(e); 
+    // this returns a BUNCH of different events. We have 6 transition end events for ONE little fade in (a whole bunch of things transition)
+    // The border has transitioned, the box shadow has transitioned, a whole slew of css stylings
+
+    //if (e.propertyName !== 'transform') return; // skip it if its not a transform, we're only interested in transform property
+    //console.log(e.propertyName);
+
+    //console.log(this); // Cheap and dirty way to find out wtf "this" is (in this case, "this" is equal to the actual key)
+    this.classList.remove('playing'); // remove styling class of playing, so that we can fade out and transition back to a normal key.
+
+    // But why does it fade out?
+  }
+
+
+  const keys = document.querySelectorAll('.key');
+  // This gives us an array of every single element that is matched (we can also view this via the browser consols elements tab)
+
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  // Note: we dont want to attach all of this logic JUST to the keydown event, we can have it in our own function
+  window.addEventListener('keydown', playSound); // we added this event listener all the way at the bottom of our script...not sure why though.
 
 </script>
 
