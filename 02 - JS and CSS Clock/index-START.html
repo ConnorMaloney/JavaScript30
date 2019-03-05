@@ -87,14 +87,16 @@
       minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
       hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
 
-      // Fixed bug
+      // TODO: Replace this with helper function
       // Styling results in a janky reset every time a hand reaches 90 degrees (once every 60 seconds). If we temporarily remove it, hand continues ticking smoothly.
       if (secondsDegrees === 90) {
         console.log("resetting second hand");
-        //secondHand.style.transition = 'none';
-        clockHands.forEach(hand => hand.style.transition = 'none');
+        secondHand.style.transition = 'all 0.0s';
+        //clockHands.forEach(hand => hand.style.transition = 'all 0.0s');
       }
 
+      /* These loops are causing it to break */
+      /*
       if (minutesDegrees === 90) {
         console.log("resetting minute hand");
         minuteHand.style.transition = 'none';
@@ -104,6 +106,8 @@
         console.log("resetting hour hand");
         hourHand.style.transition = 'none';
       }
+      */
+      
 
       else {
         clockHands.forEach(hand => hand.style.transition = ''); // this resets transition for all hands
