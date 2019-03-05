@@ -62,12 +62,43 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%; /* this is the origin of our transformation adjustments. transforms along the x-axis, default is 50% */
+      transform: rotate(90deg); /* now all hands are pointing up */
+      transition: all 0.5s; /* all transitions occur ever 0.5 seconds */
+      transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); /* this makes our tick go back, we can customize this in the chrome editor*/
     }
 
   </style>
 
   <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minuteHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+    const clockHands = document.querySelectorAll('.hand'); // get all hands
+    function setDate() {
+      const now = new Date(); // this is getting the exact time
+      const seconds = now.getSeconds(); // this is now getting the current seconds
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+      const secondsDegrees = ((seconds / 60) * 360) + 90; // this gives us the degrees we need to show each second. +90 for resetting our intial offset styling
+      const minutesDegrees = ((minutes / 60) * 360) + 90; 
+      const hoursDegrees = ((hours / 12) * 360) + 90; // divide by 12 as we go 
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
 
+      // Styling results in a janky reset every time a hand reaches 90 degrees (once every 60 seconds). If we temporarily remove it, hand continues ticking smoothly.
+      if (secondsDegrees === 90) {
+        console.log("reached edge case");
+        clockHands.forEach(hand => hand.style.transition = 'none'); // set transition to be none for any hand 
+      }
+
+      else {
+        clockHands.forEach(hand => hand.style.transition = ''); // this resets transition
+      }
+    }
+
+    setInterval(setDate, 1000); // this script runs every second
 
   </script>
 </body>
