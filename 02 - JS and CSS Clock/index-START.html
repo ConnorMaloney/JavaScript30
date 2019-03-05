@@ -87,6 +87,7 @@
       minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
       hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
 
+      // Fixed bug
       // Styling results in a janky reset every time a hand reaches 90 degrees (once every 60 seconds). If we temporarily remove it, hand continues ticking smoothly.
       if (secondsDegrees === 90) {
         console.log("reached edge case");
