@@ -90,12 +90,23 @@
       // Fixed bug
       // Styling results in a janky reset every time a hand reaches 90 degrees (once every 60 seconds). If we temporarily remove it, hand continues ticking smoothly.
       if (secondsDegrees === 90) {
-        console.log("reached edge case");
-        clockHands.forEach(hand => hand.style.transition = 'none'); // set transition to be none for any hand 
+        console.log("resetting second hand");
+        //secondHand.style.transition = 'none';
+        clockHands.forEach(hand => hand.style.transition = 'none');
+      }
+
+      if (minutesDegrees === 90) {
+        console.log("resetting minute hand");
+        minuteHand.style.transition = 'none';
+      }
+
+      if (hoursDegrees === 90) {
+        console.log("resetting hour hand");
+        hourHand.style.transition = 'none';
       }
 
       else {
-        clockHands.forEach(hand => hand.style.transition = ''); // this resets transition
+        clockHands.forEach(hand => hand.style.transition = ''); // this resets transition for all hands
       }
     }
 
